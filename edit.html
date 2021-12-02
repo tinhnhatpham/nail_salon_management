@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+      <!--Let browser know website is optimized for mobile-->
+      <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+      <style>
+        table
+        {
+            table-layout: fixed;
+            width: 1000px;
+        }
+      </style>
+      <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, {});
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+          var elems = document.querySelectorAll('.datepicker');
+          var instances = M.Datepicker.init(elems, {
+          defaultDate: new Date(),
+          setDefaultDate: true,
+          onSelect:function(date){
+            var nailTechSelect = document.getElementById('nailTech');
+            google.script.run.withSuccessHandler(getEditDataCallBack).getEditData(nailTechSelect.value, date.toString());
+          },
+          autoClose:true,
+        });
+      });
+      function setPageValues () {
+
+                  
+        google.script.run.withSuccessHandler(dispNailTech).getNailTechConfig();
+      }
+      function dispNailTech(values){
+          var select = document.getElementById('nailTech');
+          addSelect(values, select);
+          M.FormSelect.init(select);
+      }
+
+      function getEditDataCallBack(values) {
+        clearTables();
+        for (techId in values) {
+          createIndividualTable(values[techId].list);
+        }
+      }
+      
+
+      function addSelect(list, select) {
+          for (var i=0; i<list.length; i++) {
+            var slt = list[i];
+            var el = document.createElement("option");
+            el.value = slt[0];
+            el.innerHTML  = slt[1];
+            var count = 0;
+            for (var j=2; j<slt.length; j++) {
+              count++;
+              el.setAttribute('extra' + count, slt[j]);
+            }
+            
+            select.options.add(el);
+            
+          }
+          M.FormSelect.init(select);
+      }
+      </script>
+    </head>
+
+    <body onload="setPageValues()">
+      <div class="container">
+        <div class="row">
+          <div class="input-field col s4">
+            <!-- Select nail tech -->
+            <select id="nailTech">
+              <option value="" disabled selected>Select Nail Tech</option>
+            </select>
+          </div>
+          <div class="input-field col s4">
+            <input id="dateReport" type="text" class="datepicker">
+            <label for="dateReport">Select Date</label>
+          </div>
+          <!-- <div class="input-field col s4">
+            <button class="btn waves-effect green" id='btnRun'>SEARCH
+            </button>
+          </div> -->
+        </div> 
+      
+      <script>     
+
+        function clearTables() {
+          var tables = document.getElementsByTagName("TABLE");
+          for (var i=tables.length-1; i>=0;i-=1)
+            if (tables[i]) tables[i].parentNode.removeChild(tables[i]);
+        }
+        
+        function createTable(tableData) {
+          var table = document.createElement('table');
+          var tableBody = document.createElement('tbody');
+
+          tableData.forEach(function(rowData) {
+            var row = document.createElement('tr');
+
+            rowData.forEach(function(cellData) {
+              var cell = document.createElement('td');
+              cell.appendChild(document.createTextNode(cellData));
+              row.appendChild(cell);
+            });
+
+            tableBody.appendChild(row);
+          });
+
+          
+          table.appendChild(tableBody);
+          document.body.appendChild(table);
+        }
+
+        function createIndividualTable(tableData) {
+          var table = document.createElement('table');
+          table.setAttribute("class", "highlight")
+          var tableBody = document.createElement('tbody');
+
+
+          tableData.forEach(function(rowData) {
+            var row = document.createElement('tr');
+
+            var countIndex = 0;
+            rowData.forEach(function(cellData) {
+              countIndex++;
+              var cell = document.createElement('td');
+              cell.appendChild(document.createTextNode(cellData));
+              if (countIndex == rowData.length) {
+                row.setAttribute("UUID", cell.innerHTML)
+                return;
+              }
+              row.appendChild(cell);
+
+              
+            });
+            
+
+            // var btnEdit = document.createElement('input');
+            // btnEdit.type = "button";
+            // btnEdit.className = "btn";
+            // btnEdit.value = "Edit";
+            // // btnEdit.onclick = (function(entry) {return function() {chooseUser(entry);}})(entry);
+
+            // var btnDel = document.createElement('input');
+            // btnDel.type = "button";
+            // btnDel.className = "btn";
+            // btnDel.value = "Delete";
+            // // btn.onclick = (function(entry) {return function() {chooseUser(entry);}})(entry);
+
+            // row.appendChild(btnEdit);
+            // row.appendChild(btnDel);
+
+            var createClickHandler = function(row) {
+              return function() {
+                google.script.run.showEditDialog(row.getAttribute("UUID"));
+              };
+            };
+            row.onclick = createClickHandler(row);
+
+
+            tableBody.appendChild(row);
+          });
+          table.appendChild(tableBody);
+          document.body.appendChild(table);
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, {});
+        });
+      </script>
+
+      <script>
+                  var select = document.createElement("select");
+                  select.setAttribute("name", "a");
+                  select.setAttribute("id", "b");
+                  var option = document.createElement("option");
+                  option.setAttribute("value", "value one");
+                  option.innerHTML = "ONE";
+                  select.appendChild(option);
+                  document.body.appendChild(table);
+                   // M.FormSelect.init(select); 
+                  
+                  // 
+                  
+      </script>
+
+</div>
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+  </html>

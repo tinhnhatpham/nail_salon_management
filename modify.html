@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+      <!--Let browser know website is optimized for mobile-->
+      <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+
+      <!-- <style>
+        #toast-container {
+          top: auto !important;
+          right: auto !important;
+          bottom: 10%;
+          left:10%;
+        }
+      </style> -->
+      <script>
+        $(document).ready(function() {
+          $('select').material_select();
+        });
+        </script>
+
+      <script type="text/javascript">
+        function setPageValues () {
+          google.script.run.withSuccessHandler(dispPaymentType).getPaymetTypeConfig();
+          google.script.run.withSuccessHandler(dispNailTech).getNailTechConfig();
+          google.script.run.withSuccessHandler(dispDiscount).getDiscountConfig();
+          google.script.run.withSuccessHandler(dispTipType).getTipConfig();
+        }
+        function dispNailTech(values){
+            var select = document.getElementById('nailTech');
+            addSelect(values, select);
+            select.selectedIndex = "<?!= data.id ?>";
+            M.FormSelect.init(select);
+        }
+
+        function dispPaymentType(values){
+            var select = document.getElementById('amountPMType');
+            addSelect(values, select);
+            select.selectedIndex = "<?!= data.paymentType ?>";
+            M.FormSelect.init(select);
+        }
+
+        function dispDiscount(values){
+            var select = document.getElementById('discount');
+            addSelect(values, select);
+            select.selectedIndex = "<?!= data.discountType ?>";
+            M.FormSelect.init(select);
+        }
+
+        function dispTipType(values){
+            var select = document.getElementById('tipType');
+            addSelect(values, select);
+            select.selectedIndex = "<?!= data.tipType ?>";
+            M.FormSelect.init(select);
+        }
+
+        function addSelect(obj, select) {
+            for (var key in obj) {
+              var slt = obj[key];
+              var el = document.createElement("option");
+              el.value = slt[0];
+              el.innerHTML  = slt[1];
+              var count = 0;
+              for (var j=2; j<slt.length; j++) {
+                count++;
+                el.setAttribute('extra' + count, slt[j]);
+              }
+              
+              select.options.add(el);
+              
+            }
+            M.FormSelect.init(select);
+        }
+
+      </script>
+
+    </head>
+
+    <body onload="setPageValues()">
+    <div class="container">
+      <div class="row">
+        <div class="input-field col s4">
+          <p><b><span></span></b></p>
+        </div>
+        <div class="input-field col s4">
+          <button class="btn waves-effect waves-light" id='btnDelete'>DELETE
+          </button>
+        </div>
+      </div> <!-- End row -->
+      <div class="row">
+        <div class="input-field col s4">
+          <!-- Select nail tech -->
+          <select id="nailTech">
+            <option value="" disabled selected>Select Nail Tech</option>
+          </select>
+        </div>
+        <!-- Amount charge -->
+        <div class="input-field col s4">
+          <!-- <i class="material-icons prefix">attach_money</i> -->
+          <input id="amount" class="validate" type="number" value="<?!= data.amount ?>">
+          <label for="amount">Pay amount</label>
+        </div>
+        <!-- Payment type for charging -->
+        <div class="input-field col s4">
+          <select id="amountPMType">
+            <option value="" disabled selected>Payment Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s4">
+          <p><span class="blue-text text-darken-2"></span></p>
+        </div>
+        <!-- Amount of tip -->
+        <div class="input-field col s4">
+          <!-- <i class="material-icons prefix">attach_money</i> -->
+          <input id="tip" class="validate" type="number" value="<?!= data.tip ?>">
+          <label for="tip">Tip</label>
+        </div>
+        <!-- Check box tip by GC -->
+        <form>
+        <div class="input-field col s4">
+          <!-- Select tip type -->
+          <select id="tipType">
+            <option value="" disabled selected>Tip Type</option>
+          </select>
+        </div>
+        </form>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s4">
+          <p><span class="blue-text text-darken-2"></span></p>
+        </div>
+        <!-- Discount Elon & Healthcare -->
+        <div class="input-field col s4">
+          <select id="discount">
+            <option value="" disabled selected>Discount</option>
+          </select>
+        </div>
+        <div class="input-field col s4">
+          <p><b><span id= 'discountValue' style="color:red;"></span></b></p>
+        </div>
+      </div> 
+        <div class="input-field col s4">
+          <button class="btn waves-effect waves-light" id='btnPay'>UPDATE
+          </button>
+        </div>
+      
+
+
+      
+    </div>
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      <script>
+          document.addEventListener('DOMContentLoaded', function () {
+              var elems = document.querySelectorAll('select');
+              var instances = M.FormSelect.init(elems, {});
+          });
+      </script>
+      <script>
+        
+
+        var amountBox = document.getElementById('amount');
+        var nailTechSelect = document.getElementById('nailTech');
+        var amountPMTypeSelect = document.getElementById('amountPMType');
+        var tipBox = document.getElementById('tip');
+        var tipTypeSelect = document.getElementById('tipType');
+        var discountSelect = document.getElementById('discount');
+        
+        document.getElementById('btnPay').addEventListener('click', addPay);
+        function addPay() {
+          // if (confirm('Are you sure you want to save this thing into the database?')) {
+          //   // Save it!
+          //   alert('Thing was saved to the database.');
+          // } else {
+          //     // Do nothing!
+          //     alert('Thing was not saved to the database.');
+          // }
+          var amount = amountBox.value;
+          var name = nailTechSelect.options[nailTechSelect.selectedIndex].text;
+          var id = nailTechSelect.value;
+          var aPMType = amountPMTypeSelect.value;
+          var tip = tipBox.value;
+          var tipType = tipTypeSelect.value;
+          var discount = discountSelect.value;
+
+          if (id <= 0||amount.trim().length==0|| id === "" || amount === "") {
+            M.toast({html: 'Nail Tech and pay ammount are required!'})
+            return
+          }
+
+          if (tip > 0 && tipType === "") {
+            M.toast({html: 'Please select tip type!'})
+            return
+          }
+          if (tip === 0 || tip ==="")
+            tipType = "";
+          var data={
+            name:name,
+            id:id,
+            amount:amount,
+            amountPMType:aPMType,
+            tip:tip,
+            tipType:tipType,
+            discount:discount,
+            uuId:"<?!= data.uuId?>",
+          };
+
+          google.script.run
+            .withSuccessHandler(updateDataCallBack)
+            .updateData(data);
+        }
+
+        function updateDataCallBack(status) {
+              M.toast({html: status});
+        }
+      </script>
+    </body>
+    
+  </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

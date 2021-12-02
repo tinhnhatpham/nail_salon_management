@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+      <!--Let browser know website is optimized for mobile-->
+      <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+
+      <!-- <style>
+        #toast-container {
+          top: auto !important;
+          right: auto !important;
+          bottom: 10%;
+          left:10%;
+        }
+      </style> -->
+      <script>
+        $(document).ready(function() {
+          $('select').material_select();
+        });
+        </script>
+
+      <script type="text/javascript">
+        function setPageValues () {
+          google.script.run.withSuccessHandler(dispPaymentType).getPaymetTypeConfig();
+          google.script.run.withSuccessHandler(dispNailTech).getNailTechLoggedIn();
+          google.script.run.withSuccessHandler(dispDiscount).getDiscountConfig();
+          google.script.run.withSuccessHandler(dispTipType).getTipConfig();
+          google.script.run.withSuccessHandler(dispSalePayment).getSalePaymentConfig();
+          document.getElementById("amount").focus();
+        }
+
+        function dispSalePayment(values) {
+          var select = document.getElementById('paymentTypeSale');
+            addSelect(values, select);
+            select.selectedIndex = 1;
+            M.FormSelect.init(select);
+        }
+        function dispNailTech(values){
+            var select = document.getElementById('nailTech');
+            addSelect(values, select);
+            M.FormSelect.init(select);
+        }
+
+        function dispPaymentType(values){
+            var select = document.getElementById('amountPMType');
+            addSelect(values, select);
+            select.selectedIndex = 1;
+            M.FormSelect.init(select);
+        }
+
+        function dispDiscount(values){
+            var select = document.getElementById('discount');
+            addSelect(values, select);
+            M.FormSelect.init(select);
+        }
+
+        function dispTipType(values){
+            var select = document.getElementById('tipType');
+            addSelect(values, select);
+            select.selectedIndex = 1;
+            M.FormSelect.init(select);
+        }
+
+        function addSelect(obj, select) {
+            for (var key in obj) {
+              var slt = obj[key];
+              var el = document.createElement("option");
+              el.value = slt[0];
+              el.innerHTML  = slt[1];
+              var count = 0;
+              for (var j=2; j<slt.length; j++) {
+                count++;
+                el.setAttribute('extra' + count, slt[j]);
+              }
+              
+              select.options.add(el);
+              
+            }
+            M.FormSelect.init(select);
+        }
+
+      </script>
+      <!-- <style>
+
+        .btn {
+          width: 100%;
+        }
+      </style> -->
+    </head>
+
+    <body onload="setPageValues()">
+    <div class="container">
+      <!-- <div class="row">
+        <div class="input-field col s3">
+          <button class="btn waves-effect waves-light" width='100%' id='btnPay'>Submit
+          </button>
+        </div>
+        <div class="input-field col s3">
+          <button class="btn waves-effect waves-light" id='btnPay'>Submit
+          </button>
+        </div><div class="input-field col s3">
+          <button class="btn waves-effect waves-light" id='btnPay'>Submit
+          </button>
+        </div><div class="input-field col s3">
+          <button class="btn waves-effect waves-light" id='btnPay'>Submit
+          </button>
+        </div>
+      </div> -->
+
+
+      <div class="row">
+        
+
+        <div class="input-field col s4">
+          <!-- Select nail tech -->
+          <select id="nailTech">
+            <option value="" disabled selected>Select Nail Tech</option>
+          </select>
+        </div>
+        <!-- Amount charge -->
+        <div class="input-field col s4">
+          <!-- <i class="material-icons prefix">attach_money</i> -->
+          <input id="amount" class="validate" type="number">
+          <label for="amount">Pay amount</label>
+        </div>
+        <!-- Payment type for charging -->
+        <div class="input-field col s4">
+          <select id="amountPMType">
+            <option value="" disabled selected>Payment Type</option>
+          </select>
+        </div>
+        <div class="input-field col s4">
+          <p><span class="blue-text text-darken-2"></span></p>
+        </div>
+        <!-- Amount of tip -->
+        <div class="input-field col s4">
+          <!-- <i class="material-icons prefix">attach_money</i> -->
+          <input id="tip" class="validate" type="number">
+          <label for="tip">Tip</label>
+        </div>
+        <!-- Check box tip by GC -->
+        <form>
+        <div class="input-field col s4">
+          <!-- Select tip type -->
+          <select id="tipType">
+            <option value="" disabled selected>Tip Type</option>
+          </select>
+        </div>
+        </form>
+        <div class="input-field col s4">
+          <p><span class="blue-text text-darken-2"></span></p>
+        </div>
+
+        <!-- Discount Elon & Healthcare -->
+        <div class="input-field col s4">
+          <select id="discount">
+            <option value="" disabled selected>Discount</option>
+          </select>
+        </div>
+        <div class="input-field col s4">
+          <p><b><span id= 'discountValue' style="color:red;"></span></b></p>
+        </div>
+
+
+        <div class="input-field col s12">
+          <button class="btn waves-effect waves-light" id='btnPay'>Submit
+          </button>
+        </div>
+
+
+        <div class="input-field col s4">
+          <p><span class="blue-text text-darken-2"></span></p>
+        </div>
+
+
+        
+        <div class="input-field col s4">
+          <!-- <i class="material-icons prefix">card_giftcard</i> -->
+          <input id="saleAmount" type="number" class="validate">
+          <label>Sale amount</label>
+        </div>
+        <div class="input-field col s4">
+          <select id="paymentTypeSale">
+            <option value="" disabled selected>Payment Type</option>
+          </select>
+        </div>
+
+        <div class="input-field col s12">
+          <button class="btn waves-effect cyan darken-1" id='btnSale'>Submit Sale
+          </button>
+        </div>
+
+        <!-- <div class="input-field col s12">
+          <p><span class="blue-text text-darken-2"></span></p>
+        </div> -->
+
+        <div class="input-field col s4">
+          <button class="btn waves-effect green" id='btnCheckTurns'>Check Turns
+          </button>
+        </div>
+        <div class="input-field col s8">
+          <p><span id='nextTurns' style="font-size: 125%" class="blue-text text-darken-2"></span></p>
+        </div>
+
+
+
+
+
+      </div> <!-- End row -->
+    </div>
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      <script>
+          document.addEventListener('DOMContentLoaded', function () {
+              var elems = document.querySelectorAll('select');
+              var instances = M.FormSelect.init(elems, {});
+          });
+      </script>
+      <script>
+        
+
+        var amountBox = document.getElementById('amount');
+        var nailTechSelect = document.getElementById('nailTech');
+        var amountPMTypeSelect = document.getElementById('amountPMType');
+        var tipBox = document.getElementById('tip');
+        var tipTypeSelect = document.getElementById('tipType');
+        var discountSelect = document.getElementById('discount');
+        
+        document.getElementById('btnCheckTurns').addEventListener('click', checkTurns);
+        function checkTurns() {
+          document.getElementById('nextTurns').textContent = "";
+          google.script.run
+              .withSuccessHandler(getNextTurnCallBack)
+              .getNextTurn();
+        }
+        function getNextTurnCallBack(values) {
+          var nextTurns = document.getElementById('nextTurns');
+          // nextTurns.textContent = "dsfsdf";
+          nextTurns.textContent = values.toString();
+        }
+        document.getElementById('btnPay').addEventListener('click', addPay);
+        function addPay() {
+          var amount = amountBox.value;
+          var name = nailTechSelect.options[nailTechSelect.selectedIndex].text;
+          var id = nailTechSelect.value;
+          var aPMType = amountPMTypeSelect.value;
+          var tip = tipBox.value;
+          var tipType = tipTypeSelect.value;
+          var discount = discountSelect.value;
+
+          if (id <= 0||amount.trim().length==0|| id === "" || amount === "") {
+            M.toast({html: 'Nail Tech and pay ammount are required!'})
+          }
+          else {
+            if (tip === 0 || tip ==="")
+              tipType = "";
+            var data={
+              name:name,
+              id:id,
+              amount:amount,
+              amountPMType:aPMType,
+              tip:tip,
+              tipType:tipType,
+              discount:discount,
+            };
+            
+            // google.script.run.appenData(data);
+
+
+            google.script.run
+              .withSuccessHandler(addPayCallBack)
+              .appenData(data);
+
+            amountBox.value='';
+            nailTechSelect.selectedIndex = "";
+            M.FormSelect.init(nailTechSelect);
+            amountPMTypeSelect.selectedIndex =1;
+            M.FormSelect.init(amountPMTypeSelect);
+            discountSelect.selectedIndex="";
+            M.FormSelect.init(discountSelect);
+            tipTypeSelect.selectedIndex = 1;
+            M.FormSelect.init(tipTypeSelect);
+            tipBox.value='';
+            document.getElementById("amount").focus();
+
+          }
+        }
+
+        function addPayCallBack(status) {
+              M.toast({html: status});
+        }
+
+        // Sale data
+        var saleAmountBox = document.getElementById('saleAmount');
+        var salePMTypeSelect = document.getElementById('paymentTypeSale');
+        document.getElementById('btnSale').addEventListener('click', addSale);
+        function addSale() {
+          var sale = saleAmount.value;
+          var salePmType = salePMTypeSelect.value;
+ 
+
+          if (sale <= 0) {
+            M.toast({html: 'Sale ammount are required!'})
+          }
+          else {
+            var data={
+              sale:sale,
+              salePMType:salePmType,
+            };
+            
+            google.script.run.appenSaleData(data);
+
+            saleAmountBox.value='';
+            salePMTypeSelect.selectedIndex =1;
+            M.FormSelect.init(salePMTypeSelect);
+        }
+        }
+        // calc the discount
+        discountSelect.addEventListener('change', function() {
+          var discountValue = document.getElementById('discountValue');
+          var dValue = this.options[this.selectedIndex].getAttribute('extra1');
+          var dPercent = this.options[this.selectedIndex].getAttribute('extra2');
+          var amount = document.getElementById('amount');
+          
+          if (dPercent === 'true') {
+            discountValue.textContent = Math.round(amount.value - amount.value*dValue/100);
+          }
+          else {
+            discountValue.textContent = amount.value - dValue;
+          }
+        });
+
+        // check when payment type select on change
+        amountPMTypeSelect.addEventListener('change', function() {
+          // var selected = this.options[this.selectedIndex].getAttribute('extra1');
+          // if card is picked
+          // tipBox.disabled = false;
+          if (this.options[this.selectedIndex].value === "1") {
+            tipTypeSelect.selectedIndex = 1;
+            M.FormSelect.init(tipTypeSelect);
+          }
+          else if (this.options[this.selectedIndex].value === "3") {
+            tipTypeSelect.selectedIndex = 2;
+            M.FormSelect.init(tipTypeSelect);
+          }
+          else if (this.options[this.selectedIndex].value === "4") {
+            tipTypeSelect.selectedIndex = 3;
+            M.FormSelect.init(tipTypeSelect);
+          }
+          else if (this.options[this.selectedIndex].value === "2") {
+            // tipBox.disabled = true;
+            tipTypeSelect.selectedIndex = 0;
+            M.FormSelect.init(tipTypeSelect);
+          }
+        }); 
+
+
+        var elAmount = document.getElementById("amount");
+        elAmount.addEventListener("keyup", onChangeAmount, false);
+        function onChangeAmount() {
+            discountSelect.selectedIndex="";
+            M.FormSelect.init(discountSelect);
+            document.getElementById('discountValue').textContent = "";
+        }
+      </script>
+    </body>
+    
+  </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

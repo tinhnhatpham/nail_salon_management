@@ -1,0 +1,64 @@
+// IN CONFIG
+var PAYMENT_CREDIT_ID = 1;
+var PAYMENT_CASH_ID = 2;
+var PAYMENT_GC_ID = 3;
+var PAYMENT_CHECK_ID = 4;
+
+var TIP_BY_CARD = 1;
+var TIP_BY_GC = 2;
+var TIP_BY_CHECK = 3;
+
+var CONFIG_SALE_BY_CARD = 1;
+var CONFIG_SALE_BY_CASH = 2;
+var CONFIG_SALE_BY_CHECK = 3;
+
+// IN SHEET DATA
+var DATA_NAIL_TECH_ID = 0;
+var DATA_NAIL_TECH = 1;
+var DATA_AMOUNT = 2;
+var DATA_PAYMENT_TYPE_ID = 3;
+var DATA_TIP = 4;
+var DATA_TIP_TYPE_ID = 5;
+var DATA_DISCOUNT_TYPE_ID = 6;
+var DATA_DATE = 7;
+var DATA_UUID = 8;
+
+var SALE_AMOUNT = 0;
+var SALE_PAYMENT_TYPE = 1;
+var SALE_DATE = 2;
+
+var LOGIN_ID = 0;
+var LOGIN_NAME = 1;
+var LOGIN_DATE= 2;
+var LOGIN_BASE_VALUE = 3;
+
+var LOGOUT_ID = 0;
+var LOGOUT_NAME = 1;
+var LOGOUT_DATE= 2;
+
+var PAYMENT_ID = 0;
+var PAYMENT_TYPE = 1;
+var PAYMENT_SHORT = 2;
+
+var TIP_ID = 0;
+var TIP_TYPE = 1;
+var TIP_SHORT = 2;
+
+var TECH_ID = 0;
+var TECH_NAME = 1;
+var TECH_ROLE = 2;
+var TECH_COMMISSION = 3;
+var TECH_SALARY = 4;
+var TECH_EMAIL = 5;
+var TECH_HOURLY_PAY = 6;
+
+var CONFIG_DISCOUNT_ID = 0;
+var CONFIG_DISCOUNT_DESC = 1;
+var CONFIG_DISCOUNT_VALUE = 2;
+var CONFIG_DISCOUNT_BY_PERCENT = 3;
+
+// COMMONS
+var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+var LATE_HOUR = 10;
+var LATE_MIN = 30;
+var DIFF_COUNT = 15;

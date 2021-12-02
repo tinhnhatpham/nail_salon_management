@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+      <!--Let browser know website is optimized for mobile-->
+      <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+      <style>
+        table
+        {
+            table-layout: fixed;
+            width: 1000px;
+        }
+      </style>
+      <script type="text/javascript">
+          document.addEventListener('DOMContentLoaded', function () {
+              var elems = document.querySelectorAll('select');
+              var instances = M.FormSelect.init(elems, {});
+          });
+          document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(elems, {
+            defaultDate: new Date(),
+            setDefaultDate: true,
+            onSelect:function(date){
+              google.script.run.withSuccessHandler(getReportCallBack).getReportWeely(date.toString(), date.toString());
+            },
+            autoClose:true,
+          });
+        });
+
+
+        function setPageValues () {
+          var date = new Date();
+          // document.getElementById('dateReport').value = date;
+          google.script.run.withSuccessHandler(getReportCallBack).getReportWeely(date.toString(), date.toString());
+        }
+      </script>
+    </head>
+
+    <body onload="setPageValues()">
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="dateReport" type="text" class="datepicker">
+          <label for="dateReport">Select Date</label>
+        </div>
+        <!-- <div class="input-field col s6">
+        <p>
+          <label>
+            <input id='reportByWeek' type="checkbox" class="filled-in" onchange="weeklyReport(this)"/>
+            <span>Report by week</span>
+          </label>
+        </p>
+        </div>
+      </div> -->
+
+      <script>
+        function clearTables() {
+          var tables = document.getElementsByTagName("TABLE");
+          for (var i=tables.length-1; i>=0;i-=1)
+            if (tables[i]) tables[i].parentNode.removeChild(tables[i]);
+        }
+        function weeklyReport(checkboxElem) {
+          var datePicker = document.getElementById('dateReport');
+          var date = datePicker.value;
+          if (date == "")
+            date = new Date();
+          if (checkboxElem.checked) {
+            clearTables();
+            google.script.run.withSuccessHandler(getIndividualReportByWeekCallBack).getIndividualReportByWeek(date.toString());
+            
+            
+          } else {
+            clearTables();
+            google.script.run.withSuccessHandler(getReportCallBack).getReportByDay(date.toString());
+          }
+        }
+        function getReportCallBack(values) {
+          // alert(values)
+          clearTables();
+          createTable(values);
+          // for (var i=0; i<values.length; i++) {
+          //   createIndividualTable(values[1][i]);
+          // }
+        }
+        function getIndividualReportByWeekCallBack(values){
+            for (var i=0; i<values.length; i++)
+              createTable(values[i]);
+        }
+        function getIndividualReportByDayCallBack(values) {
+          for (var i=0; i<values.length; i++) {
+            createIndividualTable(values[i]);
+          }
+          
+        }
+        function createTable(tableData) {
+          var table = document.createElement('table');
+          var tableBody = document.createElement('tbody');
+
+          tableData.forEach(function(rowData) {
+            var row = document.createElement('tr');
+
+            rowData.forEach(function(cellData) {
+              var cell = document.createElement('td');
+              cell.appendChild(document.createTextNode(cellData));
+              row.appendChild(cell);
+            });
+
+            tableBody.appendChild(row);
+          });
+
+          
+          table.appendChild(tableBody);
+          document.body.appendChild(table);
+        }
+
+        function createIndividualTable(tableData) {
+          var table = document.createElement('table');
+          // table.setAttribute('class', 'centered');
+
+          var orderArrayHeader = tableData[0];
+          for(var i=0;i<orderArrayHeader.length;i++){
+            table.appendChild(document.createElement("th")).
+            appendChild(document.createTextNode(orderArrayHeader[i]));
+          }
+
+          var tableBody = document.createElement('tbody');
+
+          var isTotal = false;
+          var count = 0;
+          tableData.forEach(function(rowData) {
+            count++;
+            if (count == 1) {return;}
+            var row = document.createElement('tr');
+
+            if (rowData[0] === 'TOTAL')
+              isTotal = true;
+            else 
+              isTotal = false;
+
+            rowData.forEach(function(cellData) {
+              var cell = document.createElement('td');
+              if (isTotal) {
+                // cell.style.fontWeight = 'bold';
+                // cell.style.backgroundColor = "#E8E8E8";
+                cell.style.color = "Red";
+              }
+              
+              cell.appendChild(document.createTextNode(cellData));
+              row.appendChild(cell);
+            });
+
+            tableBody.appendChild(row);
+          });
+
+          
+          table.appendChild(tableBody);
+          document.body.appendChild(table);
+        }
+
+
+      </script>
+
+
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+  </html>

@@ -113,13 +113,13 @@ function getTotalByMemberObj() {
   data.filter(function(row){
     var date = getDate(new Date(row[DATA_DATE]));
     var techId = row[DATA_NAIL_TECH_ID];
-    if (!(techId in obj)) {
-        obj[techId] = [0, row[DATA_NAIL_TECH]];
-      }
     if (date == now) {
       // if (!(techId in obj)) {
       //   obj[techId] = [0, row[DATA_NAIL_TECH]];
       // }
+      if (!(techId in obj) && techId > 0) {
+        obj[techId] = [0, row[DATA_NAIL_TECH]];
+      }
       obj[techId][0] += row[DATA_AMOUNT];
   }});
   return obj;
@@ -130,8 +130,8 @@ function getNextTurn() {
   var totalObj = getTotalByMemberObj();
   var arrListMember = [];
   var arrTotal = [];
-  for (var i = 0; i < members.length; i++) {
-    arrTotal.push(totalObj[members[i][LOGIN_ID]][0]);
+  for (var i = 0; i < totalObj.length; i++) {
+    arrTotal.push(totalObj[[i][LOGIN_ID]][0]);
   }
 
   for (var i = 0; i < members.length; i++) {

@@ -58,7 +58,7 @@ function appenLogoutData(data) {
       table = table + "<td>"+ "" +"</td>";
 
       table=table+"</table></body></html>";
-      Logger.log(table);
+      // Logger.log(table);
       sendEmail(nailTechConfig[TECH_EMAIL], "Daily Report", table);
     }
     
@@ -67,16 +67,15 @@ function appenLogoutData(data) {
   return true;
 }
 
-function getBaseValue(date = new Date()) {
+function getBaseValue(date = new Date(), techId) {
   var hour = date.getHours();
   var min = date.getMinutes();
   var temp = hour.toString() + min.toString();
   var tempLateHour = LATE_HOUR.toString() + LATE_MIN.toString();
-  Logger.log(temp)
-  Logger.log(tempLateHour)
+  // Logger.log(temp)
+  // Logger.log(tempLateHour)
   if (temp >= tempLateHour) {
     var list = getNailTechLoggedIn();
-    Logger.log(list)
     var minValue = 0;
     var isFirst = true;
     for (var i=0; i<list.length; i++) {
@@ -89,16 +88,13 @@ function getBaseValue(date = new Date()) {
       }
       
       var curValue = getTotalByMember(list[i][LOGIN_ID]);
-      Logger.log(curValue)
       if (isFirst)
         minValue = curValue;
       isFirst = false;
       if (list[i][LOGIN_BASE_VALUE] > 0)
-        minValue = minValue + list[i][LOGIN_BASE_VALUE];
+        curValue = curValue + list[i][LOGIN_BASE_VALUE];
       if (minValue > curValue)
         minValue = curValue;
-
-      Logger.log(minValue)
     }
     return minValue;
   } 

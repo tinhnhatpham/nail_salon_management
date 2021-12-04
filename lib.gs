@@ -1,10 +1,10 @@
 function getDate(date = new Date()) {
-  var temp = Utilities.formatDate(date, "GMT-0400", "yyyyMMdd");
+  var temp = Utilities.formatDate(date, "GMT-0500", "yyyyMMdd");
   return temp;
 }
 
 function getDisplayDate(date = new Date()) {
-  var temp = Utilities.formatDate(date, "GMT-0400", "MM/dd/yy HH:mm");
+  var temp = Utilities.formatDate(date, "GMT-0500", "MM/dd/yy HH:mm");
   return temp;
 }
 // need to replace by GetNailTechConfigObject

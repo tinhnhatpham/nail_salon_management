@@ -72,17 +72,33 @@ function getBaseValue(date = new Date()) {
   var min = date.getMinutes();
   var temp = hour.toString() + min.toString();
   var tempLateHour = LATE_HOUR.toString() + LATE_MIN.toString();
+  Logger.log(temp)
+  Logger.log(tempLateHour)
   if (temp >= tempLateHour) {
     var list = getNailTechLoggedIn();
+    Logger.log(list)
     var minValue = 0;
+    var isFirst = true;
     for (var i=0; i<list.length; i++) {
+      // exception for owner & Vicky, don't wanna hardcode but don't have time
+      var removeList = ["Steve", "Kelly", "Vicky"];
+      if (removeList.includes(list[i][LOGIN_NAME]))
+      {
+        // Logger.log(list[i][LOGIN_NAME])
+        continue;
+      }
+      
       var curValue = getTotalByMember(list[i][LOGIN_ID]);
-      if (i == 0)
+      Logger.log(curValue)
+      if (isFirst)
         minValue = curValue;
+      isFirst = false;
       if (list[i][LOGIN_BASE_VALUE] > 0)
-        curValue = curValue + list[i][LOGIN_BASE_VALUE];
+        minValue = minValue + list[i][LOGIN_BASE_VALUE];
       if (minValue > curValue)
         minValue = curValue;
+
+      Logger.log(minValue)
     }
     return minValue;
   } 

@@ -134,6 +134,7 @@ function getTotalByMemberObj() {
       }
       obj[techId][0] += row[DATA_AMOUNT];
   }});
+  
   return obj;
 }
 
@@ -142,10 +143,15 @@ function getNextTurn() {
   var totalObj = getTotalByMemberObj();
   var arrListMember = [];
   var arrTotal = [];
-  for (var i = 0; i < totalObj.length; i++) {
-    arrTotal.push(totalObj[[i][LOGIN_ID]][0]);
+  for (i = 0; i < members.length; i++) {
+    if (members[i][LOGIN_ID] in totalObj)
+      arrTotal.push(totalObj[members[i][LOGIN_ID]][0]);
+    else
+      arrTotal.push(0)
   }
-
+  Logger.log(totalObj)
+  Logger.log(members)
+  Logger.log(arrTotal)
   for (var i = 0; i < members.length; i++) {
     // var curMember = getTotalByMember(members[i][LOGIN_ID]);
     var curMember = arrTotal[i];

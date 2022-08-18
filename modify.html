@@ -18,6 +18,9 @@
         }
       </style> -->
       <script>
+        document.addEventListener('DOMContentLoaded', function () {
+              M.AutoInit();
+          });
         $(document).ready(function() {
           $('select').material_select();
         });
@@ -33,7 +36,7 @@
         function dispNailTech(values){
             var select = document.getElementById('nailTech');
             addSelect(values, select);
-            select.selectedIndex = "<?!= data.id ?>";
+            select.value = "<?!= data.id ?>";
             M.FormSelect.init(select);
         }
 
@@ -76,6 +79,17 @@
             M.FormSelect.init(select);
         }
 
+        function loadNewPage(url) {
+          window.open(url,"_top");
+        }
+
+        function getUrl(qs)
+        {
+          google.script.run
+              .withSuccessHandler(loadNewPage)
+              .getScriptURL(qs);
+        }
+
       </script>
 
     </head>
@@ -83,11 +97,38 @@
     <body onload="setPageValues()">
     <div class="container">
       <div class="row">
+        <div class="input-field col s2">
+          <ul id="slide-out" class="sidenav">
+            <!-- <li><div class="user-view">
+              <div class="background">
+                <img src="images/office.jpg">
+              </div>
+              <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+              <a href="#!name"><span class="white-text name">John Doe</span></a>
+              <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+            </div></li> -->
+            <li><a href="#!" onclick="getUrl('?mode=main-page');">Main Menu</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=report');">Report Daily</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=report_members');">Report Members Daily</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=report_weekly');">Report Weekly</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=edit');">Edit</a></li>
+            <!-- <li><div class="divider"></div></li>
+            <li><a class="subheader">Subheader</a></li>
+            <li><a class="waves-effect" href="#!">Third Link With Waves</a></li> -->
+          </ul>
+          <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+              <!-- Compiled and minified JavaScript -->
+        </div>
+      </div>
+      <div class="row">
         <div class="input-field col s4">
-          <p><b><span></span></b></p>
+          <!-- <p><b><span></span></b></p> -->
         </div>
         <div class="input-field col s4">
-          <button class="btn waves-effect waves-light" id='btnDelete'>DELETE
+          <!-- <p><b><span></span></b></p> -->
+        </div>
+        <div class="input-field col s4">
+          <button class="btn waves-effect red" id='btnDelete' style="float: right;" disabled=true>DELETE
           </button>
         </div>
       </div> <!-- End row -->
@@ -146,10 +187,16 @@
           <p><b><span id= 'discountValue' style="color:red;"></span></b></p>
         </div>
       </div> 
+      <div class="row">
         <div class="input-field col s4">
+        </div>
+        <div class="input-field col s4" style="text-align:center">
           <button class="btn waves-effect waves-light" id='btnPay'>UPDATE
           </button>
         </div>
+        <div class="input-field col s4">
+        </div>
+      </div>
       
 
 

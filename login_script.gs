@@ -5,12 +5,21 @@ function appenLoginData(data) {
   }});
   if (list.length > 0)
     return false;
+  
+  if (data.isReceptionist)
+    data.isReceptionist = 1
+  else
+    data.isReceptionist = 0
+
+  if (data.role != 3) {
+    data.isReceptionist = 0
+  }
   var ws = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('LOGIN');
   var date = new Date();
   data.date = date;
-  ws.appendRow([data.id, data.name, data.date, getBaseValue(date)]);
+  ws.appendRow([data.id, data.name, data.date, getBaseValue(date), data.isReceptionist]);
 
-  showSaleDialog();
+  // showSaleDialog();
 
   return true;
 }
@@ -72,6 +81,7 @@ function getBaseValue(date = new Date(), techId) {
   var min = date.getMinutes();
   var temp = hour.toString() + min.toString();
   var tempLateHour = LATE_HOUR.toString() + LATE_MIN.toString();
+  var totalByMemberObj = getTotalByMemberObj();
   // Logger.log(temp)
   // Logger.log(tempLateHour)
   if (temp >= tempLateHour) {
@@ -80,14 +90,18 @@ function getBaseValue(date = new Date(), techId) {
     var isFirst = true;
     for (var i=0; i<list.length; i++) {
       // exception for owner & Vicky, don't wanna hardcode but don't have time
-      var removeList = ["Steve", "Kelly", "Vicky"];
+      var removeList = ["Steve", "Kelly", "Angela"];
       if (removeList.includes(list[i][LOGIN_NAME]))
       {
         // Logger.log(list[i][LOGIN_NAME])
         continue;
       }
+      var id = list[i][LOGIN_ID]
       
-      var curValue = getTotalByMember(list[i][LOGIN_ID]);
+      var curValue = 0;
+      if (totalByMemberObj.hasOwnProperty(id))
+        curValue = totalByMemberObj[id][0];
+      
       if (isFirst)
         minValue = curValue;
       isFirst = false;
@@ -96,6 +110,8 @@ function getBaseValue(date = new Date(), techId) {
       if (minValue > curValue)
         minValue = curValue;
     }
+    if (minValue < 0) 
+      minValue = BASE_VALUE_DEFAULT;
     return minValue;
   } 
   else
@@ -103,8 +119,9 @@ function getBaseValue(date = new Date(), techId) {
 }
 
 function getTotalByMember(memberId) {
-  var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('DATA'); 
-  var data = activeSheet.getDataRange().getValues();
+  // var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('DATA'); 
+  // var data = activeSheet.getDataRange().getValues();
+  var data = getLastNumOfRows(sheetName = 'DATA', numOfRows = 150)
   var now = getDate(new Date());
   var total = 0;
   var filteredRows = data.filter(function(row){
@@ -118,8 +135,11 @@ function getTotalByMember(memberId) {
 }
 
 function getTotalByMemberObj() {
-  var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('DATA'); 
-  var data = activeSheet.getDataRange().getValues();
+  // var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('DATA'); 
+  // var data = activeSheet.getDataRange().getValues();
+
+  var data = getLastNumOfRows(sheetName = 'DATA', numOfRows = 150)
+
   var now = getDate(new Date());
   var obj = {};
   data.filter(function(row){
@@ -134,7 +154,7 @@ function getTotalByMemberObj() {
       }
       obj[techId][0] += row[DATA_AMOUNT];
   }});
-  
+  Logger.log(obj)
   return obj;
 }
 
@@ -149,9 +169,9 @@ function getNextTurn() {
     else
       arrTotal.push(0)
   }
-  Logger.log(totalObj)
-  Logger.log(members)
-  Logger.log(arrTotal)
+  // Logger.log(totalObj)
+  // Logger.log(members)
+  // Logger.log(arrTotal)
   for (var i = 0; i < members.length; i++) {
     // var curMember = getTotalByMember(members[i][LOGIN_ID]);
     var curMember = arrTotal[i];
@@ -189,7 +209,7 @@ function getNextTurn() {
       }
     }
   }
-  var removeList = ["Steve", "Kelly", "Vicky"];
+  var removeList = ["Steve", "Kelly", "Angela"];
   // var removeList = [];
   var temp = [];
     for( var i = 0; i < arrListMember.length; i++){ 

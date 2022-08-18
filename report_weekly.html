@@ -42,20 +42,14 @@
     </head>
 
     <body onload="setPageValues()">
-      <div class="row">
-        <div class="input-field col s6">
-          <input id="dateReport" type="text" class="datepicker">
-          <label for="dateReport">Select Date</label>
+      <div class="container" id="divContainer">
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="dateReport" type="text" class="datepicker">
+            <label for="dateReport">Select Date</label>
+          </div>
         </div>
-        <!-- <div class="input-field col s6">
-        <p>
-          <label>
-            <input id='reportByWeek' type="checkbox" class="filled-in" onchange="weeklyReport(this)"/>
-            <span>Report by week</span>
-          </label>
-        </p>
-        </div>
-      </div> -->
+      </div>
 
       <script>
         function clearTables() {
@@ -110,11 +104,13 @@
             });
 
             tableBody.appendChild(row);
+            
           });
 
           
           table.appendChild(tableBody);
-          document.body.appendChild(table);
+          var divContainer = document.getElementById('divContainer')
+          divContainer.appendChild(table)
         }
 
         function createIndividualTable(tableData) {
@@ -158,7 +154,8 @@
 
           
           table.appendChild(tableBody);
-          document.body.appendChild(table);
+          var divContainer = document.getElementById('divContainer')
+          divContainer.appendChild(table)
         }
 
 

@@ -29,8 +29,8 @@
           defaultDate: new Date(),
           setDefaultDate: true,
           onSelect:function(date){
-            var nailTechSelect = document.getElementById('nailTech');
-            google.script.run.withSuccessHandler(getEditDataCallBack).getEditData(nailTechSelect.value, date.toString());
+            // var nailTechSelect = document.getElementById('nailTech');
+            // google.script.run.withSuccessHandler(getEditDataCallBack).getEditData(nailTechSelect.value, date.toString());
           },
           autoClose:true,
         });
@@ -102,7 +102,6 @@
             <li><a href="#!" onclick="getUrl('?mode=report_members');">Report Members Daily</a></li>
             <li><a href="#!" onclick="getUrl('?mode=report_weekly');">Report Weekly</a></li>
             <li><a href="#!" onclick="getUrl('?mode=edit');">Edit</a></li>
-            <li><a href="#!" onclick="getUrl('?mode=email');">Send Email Report</a></li>
             <!-- <li><div class="divider"></div></li>
             <li><a class="subheader">Subheader</a></li>
             <li><a class="waves-effect" href="#!">Third Link With Waves</a></li> -->
@@ -110,7 +109,11 @@
           <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
               <!-- Compiled and minified JavaScript -->
         </div>
-
+        <div class="row">
+          <div class="input-field col s8" style="text-align: center;">
+            <p><b>SEND REPORT EMAIL</b></p>
+          </div>
+        </div>
         <div class="row">
           <div class="input-field col s4">
             <!-- Select nail tech -->
@@ -122,13 +125,39 @@
             <input id="dateReport" type="text" class="datepicker">
             <label for="dateReport">Select Date</label>
           </div>
-          <!-- <div class="input-field col s4">
-            <button class="btn waves-effect green" id='btnRun'>SEARCH
+          <div class="input-field col s4">
+            <button class="btn waves-effect green" id='btnSendReportEmail'>SEND REPORT
             </button>
-          </div> -->
+          </div>
         </div> 
       
       <script>     
+        document.getElementById('btnSendReportEmail').addEventListener('click', sendReportEmail);
+
+        function sendReportEmail() {
+          var nailTechSelect = document.getElementById('nailTech');
+          var id = nailTechSelect.value;
+
+          var date = document.getElementById('dateReport')
+
+          var data={
+            date:date.value,
+            id:id
+          };
+        
+          google.script.run
+              .withSuccessHandler(sendEmailReportDailyCallBack)
+              .sendEmailReportDaily(data);
+          
+        }
+
+        function sendEmailReportDailyCallBack(status) {
+              M.toast({html: status})
+        }
+
+        
+
+
 
         function clearTables() {
           var tables = document.getElementsByTagName("TABLE");

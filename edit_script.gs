@@ -1,14 +1,18 @@
 function getEditData(techId, date) {
+  
   date = getDate(new Date(date));
-  Logger.log(techId)
+  Logger.log(date)
   var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('DATA'); 
   var data = activeSheet.getDataRange().getValues().filter(function(row){
       var d =  getDate(new Date(row[DATA_DATE]));
       if (date == d && techId == row[DATA_NAIL_TECH_ID]) {
         return row;
       }});;
-  Logger.log(data);
+  Logger.log(data)
   var dataObj = {};
+  var discountConfig = getDiscountConfig();
+  var paymentTypeConfig = getPaymetTypeConfig();
+  var tipConfig = getTipConfig();
   for (var i=0; i<data.length; i++) {
     // var techId = data[i][DATA_NAIL_TECH_ID];
     if (!(techId in dataObj)) {
@@ -23,15 +27,23 @@ function getEditData(techId, date) {
     var temp = [];
     temp.push(data[i][DATA_NAIL_TECH]);
     temp.push(data[i][DATA_AMOUNT]);
-    temp.push(data[i][DATA_PAYMENT_TYPE_ID]);
+    // temp.push(data[i][DATA_PAYMENT_TYPE_ID]);
+    temp.push(data[i][DATA_PAYMENT_TYPE_ID] > 0 ? paymentTypeConfig[data[i][DATA_PAYMENT_TYPE_ID]][PAYMENT_SHORT] : "");
     temp.push(data[i][DATA_TIP] == "" ? 0 : data[i][DATA_TIP]);
-    temp.push(data[i][DATA_TIP_TYPE_ID]);
-    temp.push(data[i][DATA_DISCOUNT_TYPE_ID]);
+    // temp.push(data[i][DATA_TIP_TYPE_ID]);
+    temp.push(data[i][DATA_TIP_TYPE_ID] > 0 ? tipConfig[data[i][DATA_TIP_TYPE_ID]][TIP_SHORT] : "");
+    var discountValue = 0;
+    if (data[i][DATA_DISCOUNT_TYPE_ID] > 0) {
+      discountValue = getDiscount(data[i][DATA_AMOUNT], data[i][DATA_DISCOUNT_TYPE_ID],discountConfig);
+
+    }
+    temp.push(discountValue);
     temp.push(getDisplayDate(data[i][DATA_DATE]));
     temp.push(data[i][DATA_UUID]);
 
     dataObj[techId].list.push(temp);
   }
+  Logger.log(dataObj)
   return dataObj;
 }
 
@@ -103,6 +115,8 @@ function updateData(values) {
   ++discountIndex;
 
   //Set the value
+  Logger.log(sheetRow)
+  Logger.log(idIndex)
   activeSheet.getRange(sheetRow, idIndex).setValue(values.id); 
   activeSheet.getRange(sheetRow, nameIndex ).setValue(values.name); 
   activeSheet.getRange(sheetRow, amountIndex ).setValue(values.amount); 

@@ -14,8 +14,16 @@
             table-layout: fixed;
             width: 1000px;
         }
+      /* .container {
+   display: inline-block;
+   width: 400px;
+   border: 1px solid black; */
+}
       </style>
       <script type="text/javascript">
+          document.addEventListener('DOMContentLoaded', function () {
+                M.AutoInit();
+            });
           document.addEventListener('DOMContentLoaded', function () {
               var elems = document.querySelectorAll('select');
               var instances = M.FormSelect.init(elems, {});
@@ -30,33 +38,68 @@
             },
             autoClose:true,
           });
-        });
+          });
 
+        function loadNewPage(url) {
+          window.open(url,"_top");
+        }
+
+        function getUrl(qs)
+        {
+          google.script.run
+              .withSuccessHandler(loadNewPage)
+              .getScriptURL(qs);
+        }
 
         function setPageValues () {
           var date = new Date();
           // document.getElementById('dateReport').value = date;
           google.script.run.withSuccessHandler(getDailyReportCallBack).getDailyReport(date.toString());
         }
+        
       </script>
     </head>
 
     <body onload="setPageValues()">
-      <div class="row">
-        <div class="input-field col s6">
-          <input id="dateReport" type="text" class="datepicker">
-          <label for="dateReport">Select Date</label>
-        </div>
-        <!-- <div class="input-field col s6">
-        <p>
-          <label>
-            <input id='reportByWeek' type="checkbox" class="filled-in" onchange="weeklyReport(this)"/>
-            <span>Report by week</span>
-          </label>
-        </p>
-        </div>
-      </div> -->
+      <div class="container" id="divContainer">
 
+        <div class="row">
+          <div class="input-field col s4">
+            <ul id="slide-out" class="sidenav">
+              <!-- <li><div class="user-view">
+                <div class="background">
+                  <img src="images/office.jpg">
+                </div>
+                <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+                <a href="#!name"><span class="white-text name">John Doe</span></a>
+                <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+              </div></li> -->
+              <li><a href="#!" onclick="getUrl('?mode=main-page');">Main Menu</a></li>
+              <li><a href="#!" onclick="getUrl('?mode=report');">Report Daily</a></li>
+              <li><a href="#!" onclick="getUrl('?mode=report_members');">Report Members Daily</a></li>
+              <li><a href="#!" onclick="getUrl('?mode=report_weekly');">Report Weekly</a></li>
+              <li><a href="#!" onclick="getUrl('?mode=edit');">Edit</a></li>
+              <li><a href="#!" onclick="getUrl('?mode=email');">Send Email Report</a></li>
+              <!-- <li><div class="divider"></div></li>
+              <li><a class="subheader">Subheader</a></li>
+              <li><a class="waves-effect" href="#!">Third Link With Waves</a></li> -->
+            </ul>
+            <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <!-- Compiled and minified JavaScript -->
+          </div>
+          
+          <div class="input-field col s4" style="text-align: center;">
+            <p><b>REPORT DAILY</b></p>
+          </div>
+        </div>  
+
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="dateReport" type="text" class="datepicker">
+            <label for="dateReport">Select Date</label>
+          </div>
+        </div>
+      </div>
       <script>
         function clearTables() {
           var tables = document.getElementsByTagName("TABLE");
@@ -98,7 +141,9 @@
 
           
           table.appendChild(tableBody);
-          document.body.appendChild(table);
+          var divContainer = document.getElementById('divContainer')
+          divContainer.appendChild(table)
+          // document.body.appendChild(table);
         }
 
         function createIndividualTable(tableData) {
@@ -142,6 +187,7 @@
 
           
           table.appendChild(tableBody);
+          // table.setAttribute("class", "striped");
           document.body.appendChild(table);
         }
 

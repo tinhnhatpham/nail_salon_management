@@ -9,14 +9,14 @@
       <!--Let browser know website is optimized for mobile-->
       <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
 
-      <!-- <style>
+      <style>
         #toast-container {
           top: auto !important;
           right: auto !important;
-          bottom: 10%;
-          left:10%;
+          bottom: 20%;
+          left:40%;
         }
-      </style> -->
+      </style>
       <script>
         $(document).ready(function() {
           $('select').material_select();
@@ -37,7 +37,19 @@
           google.script.run.withSuccessHandler(dispDiscount).getDiscountConfig();
           google.script.run.withSuccessHandler(dispTipType).getTipConfig();
           google.script.run.withSuccessHandler(dispSalePayment).getSalePaymentConfig();
+          google.script.run.withSuccessHandler(dispNailTechLogin).getNailTechConfig();
           document.getElementById("amount").focus();
+        }
+
+        function loadNewPage(url) {
+          window.open(url,"_top");
+        }
+
+        function getUrl(qs)
+        {
+          google.script.run
+              .withSuccessHandler(loadNewPage)
+              .getScriptURL(qs);
         }
 
         function dispSalePayment(values) {
@@ -48,6 +60,25 @@
         }
         function dispNailTech(values){
             var select = document.getElementById('nailTech');
+            removeOptions(select);
+            addSelect(values, select);
+            M.FormSelect.init(select);
+        }
+
+        function removeOptions(selectElement) {
+          var i, L = selectElement.options.length - 1;
+          for(i = L; i >= 0; i--) {
+              if (i > 0) {
+                selectElement.remove(i);
+              }
+                
+          }
+        }
+
+// using the function:
+
+        function dispNailTechLogin(values){
+            var select = document.getElementById('nailTechLogin');
             addSelect(values, select);
             M.FormSelect.init(select);
         }
@@ -89,7 +120,9 @@
             }
             M.FormSelect.init(select);
         }
-
+        document.addEventListener('DOMContentLoaded', function () {
+            M.AutoInit();
+        });
       </script>
       <!-- <style>
 
@@ -101,37 +134,80 @@
 
     <body onload="setPageValues()">
     <div class="container">
-      <!-- <div class="row">
-        <div class="input-field col s3">
-          <button class="btn waves-effect waves-light" width='100%' id='btnPay'>Submit
-          </button>
-        </div>
-        <div class="input-field col s3">
-          <button class="btn waves-effect waves-light" id='btnPay'>Submit
-          </button>
-        </div><div class="input-field col s3">
-          <button class="btn waves-effect waves-light" id='btnPay'>Submit
-          </button>
-        </div><div class="input-field col s3">
-          <button class="btn waves-effect waves-light" id='btnPay'>Submit
-          </button>
-        </div>
-      </div> -->
+
+    <!-- <H3>Please choose interface:</H3>
+    <input type="button" value="All Sheets" onClick="getUrl('?mode=allsheets');" />
+    <input type="button" value="One Sheet" onClick="getUrl('?mode=onesheet');" />
+    <input type="button" value="Return to Main" onClick="getUrl('');" /> -->
 
       <div class="row">
-        <div class="input-field col s4">
-          <select class="browser-default waves-effect waves-light btn">
-              <option value="" disabled="" selected="">MENU</option>
-              <option value="1">Report Daily</option>
-              <option value="2">Report Member Daily</option>
-              <option value="3">Report Weekly</option>
+        <div class="input-field col s1">
+          <ul id="slide-out" class="sidenav">
+            <!-- <li><div class="user-view">
+              <div class="background">
+                <img src="images/office.jpg">
+              </div>
+              <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+              <a href="#!name"><span class="white-text name">John Doe</span></a>
+              <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+            </div></li> -->
+            <li><a href="#!" onclick="getUrl('?mode=main-page');">Main Menu</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=report');">Report Daily</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=report_members');">Report Members Daily</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=report_weekly');">Report Weekly</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=edit');">Edit</a></li>
+            <li><a href="#!" onclick="getUrl('?mode=email');">Send Email Report</a></li>
+            <!-- <li><div class="divider"></div></li>
+            <li><a class="subheader">Subheader</a></li>
+            <li><a class="waves-effect" href="#!">Third Link With Waves</a></li> -->
+          </ul>
+          <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+              <!-- Compiled and minified JavaScript -->
+        </div>
+
+
+        <!-- <div class="input-field col s2" id="isReceptionistLable" style="visibility:hidden;">
+          <pan style="float:right;">Receptionist:</pan>
+        </div>
+        <div class="input-field col s2">
+          <div class="switch" id="isReceptionistSwitch" style="visibility:hidden">
+            <label>
+              Off
+              <input type="checkbox" checked id="isReceptionistCheckbox">
+              <span class="lever"></span>
+              On
+            </label>
+          </div>
+        </div> -->
+
+
+        <div class="input-field col s5" id="isReceptionistLable" style="visibility:visible;">
+          <pan id='lastInput'>Last Submit:</pan>
+        </div>
+
+
+        <div class="input-field col s2">
+          <!-- Select nail tech -->
+          <select id="nailTechLogin">
+            <option value="" disabled selected>Login</option>
           </select>
         </div>
-      </div>
-      <div class="row">
-        
-        
 
+        <div class="input-field col s2">
+          <button class="btn waves-effect waves-light" id='btnLogin' style="float: right;">LOGIN 
+          <i class="material-icons right">send</i>
+          </button>
+        </div>
+
+        <div class="input-field col s2">
+          <button class="btn waves-effect red lighten-2" id='btnLogout'>LOGOUT 
+          <i class="material-icons right">send</i>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="row">
         <div class="input-field col s4">
           <!-- Select nail tech -->
           <select id="nailTech">
@@ -261,6 +337,7 @@
         }
         document.getElementById('btnPay').addEventListener('click', addPay);
         function addPay() {
+          
           var amount = amountBox.value;
           var name = nailTechSelect.options[nailTechSelect.selectedIndex].text;
           var id = nailTechSelect.value;
@@ -307,8 +384,13 @@
           }
         }
 
-        function addPayCallBack(status) {
-              M.toast({html: status});
+        function addPayCallBack(values) {
+          // show last entry
+          var response = JSON.parse(values);
+          var str = "Last submit: ";
+          document.getElementById("lastInput").textContent=str.concat(response.name, " - Amount(", response.amount, ") - Tip(", response.tip, ") - ", response.time);
+          
+          M.toast({html: response.msg});
         }
 
         // Sale data
@@ -375,7 +457,6 @@
           }
         }); 
 
-
         var elAmount = document.getElementById("amount");
         elAmount.addEventListener("keyup", onChangeAmount, false);
         function onChangeAmount() {
@@ -383,6 +464,95 @@
             M.FormSelect.init(discountSelect);
             document.getElementById('discountValue').textContent = "";
         }
+      
+
+      // For login-logout
+        var nailTechLoginSelect = document.getElementById('nailTechLogin');
+        document.getElementById('btnLogin').addEventListener('click', login);
+
+        // check when login select on change
+        var isReceptionistLable = document.getElementById('isReceptionistLable');
+        var isReceptionistSwitch = document.getElementById('isReceptionistSwitch');
+        nailTechLoginSelect.addEventListener('change', function() {
+          var techRole = this.options[this.selectedIndex].getAttribute('extra1');
+          // is receptionist
+          
+          if (techRole == 3) {
+            isReceptionistLable.style.visibility = 'visible';     
+            isReceptionistSwitch.style.visibility = 'visible'; 
+          }
+          else {
+            isReceptionistLable.style.visibility = 'hidden';      
+            isReceptionistSwitch.style.visibility = 'hidden'; 
+          }
+            
+        }); 
+
+        function login() {
+          var id = nailTechLoginSelect.value;
+          var name = nailTechLoginSelect.options[nailTechLoginSelect.selectedIndex].text;
+          var receptCheckbox = document.getElementById("isReceptionistCheckbox")
+          var techRole = nailTechLoginSelect.options[nailTechLoginSelect.selectedIndex].getAttribute('extra1');
+          if (id <= 0) {
+            M.toast({html: 'Please select nail tech!'})
+            return;
+          }
+          // alert(receptCheckbox.checked)
+
+          var data={
+            name:name,
+            id:id,
+            // isReceptionist:false,
+            role:techRole
+          };
+          google.script.run
+              .withSuccessHandler(loginCallBack)
+              .appenLoginData(data);
+              
+          // isReceptionistLable.style.visibility = 'hidden';      
+          // isReceptionistSwitch.style.visibility = 'hidden'; 
+          // receptCheckbox.checked = true;
+          nailTechLoginSelect.selectedIndex = "";
+          M.FormSelect.init(nailTechLoginSelect);
+        }
+        function loginCallBack(status) {
+          if (!status) {
+              M.toast({html: 'Already logged in!'})
+          }
+          else {
+            google.script.run.withSuccessHandler(dispNailTech).getNailTechLoggedIn();
+            M.toast({html: 'Log in successfully!'})
+          }
+        }
+        document.getElementById('btnLogout').addEventListener('click', logout);
+        function logout() {
+          var id = nailTechLoginSelect.value;
+          var name = nailTechLoginSelect.options[nailTechLoginSelect.selectedIndex].text;
+          if (id <= 0) {
+            M.toast({html: 'Please select nail tech!'})
+            return;
+          }
+          var data={
+            name:name,
+            id:id,
+          };
+          google.script.run
+              .withSuccessHandler(logoutCallBack)
+              .appenLogoutData(data);
+          nailTechLoginSelect.selectedIndex = "";
+          M.FormSelect.init(nailTechLoginSelect);
+        }
+        function logoutCallBack(status) {
+          isReceptionistLable.style.visibility = 'hidden';      
+          isReceptionistSwitch.style.visibility = 'hidden'; 
+          if (!status) {
+              M.toast({html: 'Already logged out!'})
+          }
+          else {
+            M.toast({html: 'Log out successfully!'})
+          }
+        }
+
       </script>
     </body>
     

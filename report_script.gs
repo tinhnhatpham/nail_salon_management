@@ -129,7 +129,8 @@ function getMemberReport(startDate, endDate) {
         reportObj.total += commision;
       }
       if (techConfig[key][TECH_ROLE] == 2 || techConfig[key][TECH_ROLE] == 3) {
-        cash = commision / 2;
+        var cashRatio = techConfig[key][TECH_CASH_RATIO]
+        cash = commision * cashRatio / 100;
         check = commision - cash + tipWeekly;
         cash = Math.ceil(cash);
         check = Math.floor(check);
@@ -145,8 +146,7 @@ function getMemberReport(startDate, endDate) {
       // hourly payment calc
       var totalPayPerHour = 0;
       if (techConfig[key][TECH_ROLE] == 3) {
-        Logger.log("here 111")
-        temp.push(["", "LOGIN", "LOGOUT", "TOTAL HOURS", "PAY"]);
+        flag = false
         var hourlyPay = techConfig[key][TECH_HOURLY_PAY];
         var loginData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('LOGIN').getDataRange().getValues().filter(function(row){
             var date =  getDate(new Date(row[LOGIN_DATE]));
@@ -165,6 +165,11 @@ function getMemberReport(startDate, endDate) {
             }});;
         for (var i=0;i<loginData.length;i++) {
           var loginTime = loginData[i][LOGIN_DATE];
+          // if receptionist only come to do nails, don't count hour that day
+          if (loginData[i][LOGIN_PAY_BY_HOUR] != 1) {
+            continue;
+          }
+
           var logoutTemp = logoutData.filter(function(row){
             var date =  getDate(new Date(row[LOGOUT_DATE]));
             if (date == getDate(loginTime)) {
@@ -193,7 +198,14 @@ function getMemberReport(startDate, endDate) {
 
           var pay = hours * hourlyPay + (minutes/60)*hourlyPay;
           totalPayPerHour+= pay;
-          temp.push([DAYS[loginTime.getDay()], getDisplayDate(loginTime), getDisplayDate(logoutTime), hours + ":" + minutes, pay]);
+          
+          if (totalPayPerHour > 0) {
+            if (!flag) {
+              flag = true
+              temp.push(["", "LOGIN", "LOGOUT", "TOTAL HOURS", "PAY"]);
+            }
+            temp.push([DAYS[loginTime.getDay()], getDisplayDate(loginTime), getDisplayDate(logoutTime), hours + ":" + minutes, pay]);
+          }
         }
       }
       // totalPayPerHour = totalPayPerHour.toFixed(2);
@@ -227,6 +239,7 @@ function getDataReport(startDate, endDate) {
   if (date >= startDate && date <= endDate) {
     return row;
   }});
+  
   var discountConfig = getDiscountConfig();
   var objData = {
     total: 0,
@@ -310,7 +323,9 @@ function getDataReport(startDate, endDate) {
   objData.totalByGC = objData.totalByGC - objData.totalDiscountGC;
 
   objData.total = objData.totalByCard + objData.totalByCash + objData.totalByCheck + objData.totalSaleByCard + objData.totalSaleByCash + objData.totalSaleByCheck;
-  objData.total = objData.total - objData.totalDiscountCard - objData.totalDiscountCash - objData.totalDiscountCheck - objData.totalByGC;
+  // Logger.log(objData)
+  // objData.total = objData.total - objData.totalDiscountCard - objData.totalDiscountCash - objData.totalDiscountCheck - objData.totalByGC;
+  // Logger.log(objData)
   return objData;
 }
 
@@ -359,6 +374,7 @@ function getWeeklyReport(date) {
 function getDailyReport(date) {
   var date = new Date(date);
   var dataReport = getDataReport(date, date);
+  // Logger.log(dataReport)
   if (dataReport.total <= 0)
     return [];
   var report = [];

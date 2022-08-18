@@ -31,6 +31,7 @@ var LOGIN_ID = 0;
 var LOGIN_NAME = 1;
 var LOGIN_DATE= 2;
 var LOGIN_BASE_VALUE = 3;
+var LOGIN_PAY_BY_HOUR = 4;
 
 var LOGOUT_ID = 0;
 var LOGOUT_NAME = 1;
@@ -51,6 +52,8 @@ var TECH_COMMISSION = 3;
 var TECH_SALARY = 4;
 var TECH_EMAIL = 5;
 var TECH_HOURLY_PAY = 6;
+var TECH_LOGIN_ORDER = 7;
+var TECH_CASH_RATIO = 8;
 
 var CONFIG_DISCOUNT_ID = 0;
 var CONFIG_DISCOUNT_DESC = 1;
@@ -62,3 +65,4 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
 var LATE_HOUR = 10;
 var LATE_MIN = 30;
 var DIFF_COUNT = 15;
+var BASE_VALUE_DEFAULT = 30;

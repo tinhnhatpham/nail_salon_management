@@ -166,9 +166,9 @@ function getMemberReport(startDate, endDate) {
         for (var i=0;i<loginData.length;i++) {
           var loginTime = loginData[i][LOGIN_DATE];
           // if receptionist only come to do nails, don't count hour that day
-          if (loginData[i][LOGIN_PAY_BY_HOUR] != 1) {
-            continue;
-          }
+          // if (loginData[i][LOGIN_PAY_BY_HOUR] != 1) {
+          //   continue;
+          // }
 
           var logoutTemp = logoutData.filter(function(row){
             var date =  getDate(new Date(row[LOGOUT_DATE]));

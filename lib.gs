@@ -76,7 +76,7 @@ function getNailTechLoggedIn() {
 function getNailTechLoggedOut() {
   // var activeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('LOGOUT');
   // var data = activeSheet.getDataRange().getValues();
-  var data = getLastNumOfRows(sheetName = 'LOGIN', numOfRows = 30)
+  var data = getLastNumOfRows(sheetName = 'LOGOUT', numOfRows = 30)
   var filteredRows = data.filter(function(row){
     var now = getDate(new Date());
     var date = getDate(new Date(row[LOGOUT_DATE]));

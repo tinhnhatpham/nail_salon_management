@@ -471,22 +471,22 @@
         document.getElementById('btnLogin').addEventListener('click', login);
 
         // check when login select on change
-        var isReceptionistLable = document.getElementById('isReceptionistLable');
-        var isReceptionistSwitch = document.getElementById('isReceptionistSwitch');
-        nailTechLoginSelect.addEventListener('change', function() {
-          var techRole = this.options[this.selectedIndex].getAttribute('extra1');
-          // is receptionist
+        // var isReceptionistLable = document.getElementById('isReceptionistLable');
+        // var isReceptionistSwitch = document.getElementById('isReceptionistSwitch');
+        // nailTechLoginSelect.addEventListener('change', function() {
+        //   var techRole = this.options[this.selectedIndex].getAttribute('extra1');
+        //   // is receptionist
           
-          if (techRole == 3) {
-            isReceptionistLable.style.visibility = 'visible';     
-            isReceptionistSwitch.style.visibility = 'visible'; 
-          }
-          else {
-            isReceptionistLable.style.visibility = 'hidden';      
-            isReceptionistSwitch.style.visibility = 'hidden'; 
-          }
+        //   if (techRole == 3) {
+        //     isReceptionistLable.style.visibility = 'visible';     
+        //     isReceptionistSwitch.style.visibility = 'visible'; 
+        //   }
+        //   else {
+        //     isReceptionistLable.style.visibility = 'hidden';      
+        //     isReceptionistSwitch.style.visibility = 'hidden'; 
+        //   }
             
-        }); 
+        // }); 
 
         function login() {
           var id = nailTechLoginSelect.value;
@@ -497,7 +497,6 @@
             M.toast({html: 'Please select nail tech!'})
             return;
           }
-          // alert(receptCheckbox.checked)
 
           var data={
             name:name,
@@ -532,6 +531,7 @@
             M.toast({html: 'Please select nail tech!'})
             return;
           }
+          
           var data={
             name:name,
             id:id,
@@ -543,8 +543,8 @@
           M.FormSelect.init(nailTechLoginSelect);
         }
         function logoutCallBack(status) {
-          isReceptionistLable.style.visibility = 'hidden';      
-          isReceptionistSwitch.style.visibility = 'hidden'; 
+          // isReceptionistLable.style.visibility = 'hidden';      
+          // isReceptionistSwitch.style.visibility = 'hidden'; 
           if (!status) {
               M.toast({html: 'Already logged out!'})
           }
